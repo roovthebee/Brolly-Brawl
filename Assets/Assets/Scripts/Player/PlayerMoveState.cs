@@ -1,0 +1,20 @@
+
+using UnityEngine;
+using Utility;
+
+namespace Player {
+    public class PlayerMoveState : PlayerState {
+        public PlayerMoveState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) {}
+
+        public override void Update() {
+            float moveInput = Input.GetAxis("Horizontal");
+            player.rb.velocity = new Vector2(moveInput * player.moveSpeed, player.rb.velocity.y);
+
+            if (moveInput == 0) {
+                stateMachine.ChangeState("Idle");
+            } else if (Input.GetButtonDown("Jump") && player.isGrounded) {
+                stateMachine.ChangeState("Jump");
+            }
+        }
+    }
+}
