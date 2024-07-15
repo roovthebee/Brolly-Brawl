@@ -932,7 +932,7 @@ GameObject:
   - component: {fileID: 1280616499}
   - component: {fileID: 1280616498}
   - component: {fileID: 1280616497}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -953,7 +953,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   jumpForce: 14
-  isGrounded: 0
   rb: {fileID: 0}
 --- !u!70 &1280616498
 CapsuleCollider2D:
@@ -1006,7 +1005,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 4
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3f303335ef78ba44c9fddb1c56ee9a69, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1015,7 +1014,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!95 &1280616500
 Animator:

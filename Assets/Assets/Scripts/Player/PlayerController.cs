@@ -7,7 +7,6 @@ namespace Player {
     public class PlayerController : MonoBehaviour {
         public float moveSpeed = 5f;
         public float jumpForce = 7f;
-        public bool isGrounded;
         public Rigidbody2D rb;
         private StateMachine stateMachine;
 
@@ -28,16 +27,9 @@ namespace Player {
             stateMachine.Update();
         }
 
-        private void OnCollisionEnter2D(Collision2D collision) {
-            if (collision.collider.CompareTag("Ground")) {
-                isGrounded = true;
-            }
-        }
-
-        private void OnCollisionExit2D(Collision2D collision) {
-            if (collision.collider.CompareTag("Ground")) {
-                isGrounded = false;
-            }
+        public bool IsGrounded() {
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y + 0.1f, ~LayerMask.GetMask("Player"));
+            return hit.collider != null;
         }
     }
 }

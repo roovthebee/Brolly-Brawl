@@ -12,7 +12,7 @@ namespace Player {
 
             if (moveInput == 0) {
                 stateMachine.ChangeState("Idle");
-            } else if (Input.GetButtonDown("Jump") && player.isGrounded) {
+            } else if (Input.GetButtonDown("Jump") && player.IsGrounded()) {
                 stateMachine.ChangeState("Jump");
             }
         }
