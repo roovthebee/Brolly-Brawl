@@ -13,6 +13,8 @@ namespace Player {
         public override void Update() {
             if (player.IsGrounded() && player.rb.velocity.y <= 0.01f) {
                 stateMachine.ChangeState("Idle");
+            } else if (player.canGlide && Input.GetButtonDown("Jump") && player.IsAirborn()) {
+                stateMachine.ChangeState("Glide");
             } else if (Input.GetAxis("Horizontal") != 0) {
                 player.rb.velocity = new Vector2(Input.GetAxis("Horizontal") * player.moveSpeed, player.rb.velocity.y);
             }

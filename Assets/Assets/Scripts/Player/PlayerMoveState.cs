@@ -1,4 +1,5 @@
 
+using JetBrains.Annotations;
 using UnityEngine;
 using Utility;
 
@@ -10,10 +11,14 @@ namespace Player {
             float moveInput = Input.GetAxis("Horizontal");
             player.rb.velocity = new Vector2(moveInput * player.moveSpeed, player.rb.velocity.y);
 
+            bool isGrounded = player.IsGrounded();
+
             if (moveInput == 0) {
                 stateMachine.ChangeState("Idle");
             } else if (Input.GetButtonDown("Jump") && player.IsGrounded()) {
                 stateMachine.ChangeState("Jump");
+            } else if (player.canGlide && Input.GetButtonDown("Jump") && player.IsAirborn()) {
+                stateMachine.ChangeState("Glide");
             }
         }
     }
