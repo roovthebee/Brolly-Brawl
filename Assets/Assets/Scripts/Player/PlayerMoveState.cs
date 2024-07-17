@@ -17,6 +17,8 @@ namespace Player {
                 stateMachine.ChangeState("Idle");
             } else if (Input.GetButtonDown("Jump") && player.IsGrounded()) {
                 stateMachine.ChangeState("Jump");
+            } else if (Input.GetKeyDown(KeyCode.LeftShift) && player.CanDash()) {
+                stateMachine.ChangeState("Dash");
             } else if (player.canGlide && Input.GetButtonDown("Jump") && player.IsAirborn()) {
                 stateMachine.ChangeState("Glide");
             }

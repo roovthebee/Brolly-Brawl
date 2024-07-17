@@ -7,7 +7,10 @@ namespace Player {
     public class PlayerController : MonoBehaviour {
         public float moveSpeed = 5f;
         public float jumpForce = 7f;
+        public float dashForce = 5f;
+        public float dashCooldown = 1;
         public bool canGlide = true;
+        public float lastDash = 0;
         public float minVelocityY = Mathf.NegativeInfinity;
         public float glideSmoothing = 0.125f;
         public Rigidbody2D rb;
@@ -22,6 +25,7 @@ namespace Player {
             stateMachine.AddState("Move", new PlayerMoveState(this, stateMachine));
             stateMachine.AddState("Jump", new PlayerJumpState(this, stateMachine));
             stateMachine.AddState("Glide", new PlayerGlideState(this, stateMachine));
+            stateMachine.AddState("Dash", new PlayerDashState(this, stateMachine));
 
             // Set initial state
             stateMachine.ChangeState("Idle");
@@ -46,6 +50,10 @@ namespace Player {
         public bool IsAirborn() {
             RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y * 2, ~LayerMask.GetMask("Player"));
             return hit.collider == null;
+        }
+
+        public bool CanDash() {
+            return Time.realtimeSinceStartup - lastDash > dashCooldown;
         }
     }
 }
