@@ -7,7 +7,9 @@ namespace Player {
     public class PlayerController : MonoBehaviour {
         public float moveSpeed = 5f;
         public float jumpForce = 7f;
-        public bool isGrounded;
+        public bool canGlide = true;
+        public float minVelocityY = Mathf.NegativeInfinity;
+        public float glideSmoothing = 0.125f;
         public Rigidbody2D rb;
         private StateMachine stateMachine;
 
@@ -19,25 +21,31 @@ namespace Player {
             stateMachine.AddState("Idle", new PlayerIdleState(this, stateMachine));
             stateMachine.AddState("Move", new PlayerMoveState(this, stateMachine));
             stateMachine.AddState("Jump", new PlayerJumpState(this, stateMachine));
+            stateMachine.AddState("Glide", new PlayerGlideState(this, stateMachine));
 
             // Set initial state
             stateMachine.ChangeState("Idle");
         }
 
         private void Update() {
+            // Constrain velocity
+            Vector3 desiredVelocity = new Vector3(rb.velocity.x, Mathf.Max(rb.velocity.y, minVelocityY), 0);
+            Vector3 smoothedVelocity = Vector3.Lerp(rb.velocity, desiredVelocity, glideSmoothing);
+            rb.velocity = smoothedVelocity;
+
             stateMachine.Update();
         }
 
-        private void OnCollisionEnter2D(Collision2D collision) {
-            if (collision.collider.CompareTag("Ground")) {
-                isGrounded = true;
-            }
+        public bool IsGrounded() {
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y + 0.1f, ~LayerMask.GetMask("Player"));
+            if (hit.collider != null) canGlide = true;
+
+            return hit.collider != null;
         }
 
-        private void OnCollisionExit2D(Collision2D collision) {
-            if (collision.collider.CompareTag("Ground")) {
-                isGrounded = false;
-            }
+        public bool IsAirborn() {
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y * 2, ~LayerMask.GetMask("Player"));
+            return hit.collider == null;
         }
     }
 }

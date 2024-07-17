@@ -1,4 +1,5 @@
 
+using JetBrains.Annotations;
 using UnityEngine;
 using Utility;
 
@@ -13,8 +14,10 @@ namespace Player {
         public override void Update() {
             if (Input.GetAxis("Horizontal") != 0) {
                 stateMachine.ChangeState("Move");
-            } else if (Input.GetButtonDown("Jump") && player.isGrounded) {
+            } else if (Input.GetButtonDown("Jump") && player.IsGrounded()) {
                 stateMachine.ChangeState("Jump");
+            } else if (player.canGlide && Input.GetButtonDown("Jump") && player.IsAirborn()) {
+                stateMachine.ChangeState("Glide");
             }
         }
     }
