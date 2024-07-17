@@ -1,6 +1,6 @@
 
-using UnityEditor.Callbacks;
 using UnityEngine;
+using UnityEngine.UI;
 using Utility;
 
 namespace Player {
@@ -14,11 +14,14 @@ namespace Player {
 
         public override void OnExit() {
             player.minVelocityY = Mathf.NegativeInfinity;
+            player.rb.rotation = 0;
         }
 
         public override void Update() {
             if (!player.IsAirborn() || Input.GetButtonUp("Jump")) {
                 stateMachine.ChangeState("Idle");
+            } else if (Input.GetKeyDown(KeyCode.LeftShift) && player.CanDash()) {
+                stateMachine.ChangeState("Dash");
             } else if (Input.GetAxis("Horizontal") != 0) {
                 Vector2 desiredVelocity = new Vector2(Input.GetAxis("Horizontal") * player.moveSpeed, player.rb.velocity.y);
                 Vector2 smoothedVelocity = Vector2.Lerp(player.rb.velocity, desiredVelocity, Time.deltaTime);

@@ -15,6 +15,8 @@ namespace Player {
                 stateMachine.ChangeState("Idle");
             } else if (player.canGlide && Input.GetButtonDown("Jump") && player.IsAirborn()) {
                 stateMachine.ChangeState("Glide");
+            } else if (Input.GetKeyDown(KeyCode.LeftShift) && player.CanDash()) {
+                stateMachine.ChangeState("Dash");
             } else if (Input.GetAxis("Horizontal") != 0) {
                 player.rb.velocity = new Vector2(Input.GetAxis("Horizontal") * player.moveSpeed, player.rb.velocity.y);
             }
