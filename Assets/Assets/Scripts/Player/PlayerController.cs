@@ -1,22 +1,32 @@
 
 using UnityEngine;
 using Utility;
+using UI;
 
 namespace Player {
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerController : MonoBehaviour {
+        public bool dashEnabled;
+        public bool glideEnabled;
         public float moveSpeed = 5f;
         public float jumpForce = 7f;
         public float dashForce = 5f;
         public float dashCooldown = 1;
-        public bool canGlide = true;
         public float lastDash = 0;
         public float minVelocityY = Mathf.NegativeInfinity;
         public float glideSmoothing = 0.125f;
         public Rigidbody2D rb;
         private StateMachine stateMachine;
+        private Vector2 spawn;
+        public Vector2 checkpoint;
+
+        // UI
+        public GameObject fadePanel;
 
         private void Start() {
+            // Set spawn point for this level
+            spawn = transform.position;
+
             rb = GetComponent<Rigidbody2D>();
             stateMachine = new StateMachine();
 
@@ -29,6 +39,11 @@ namespace Player {
 
             // Set initial state
             stateMachine.ChangeState("Idle");
+
+            // Fade into session
+            fadePanel.GetComponent<FadePanelController>().FadeOut(delegate {
+                fadePanel.SetActive(false);
+            }, 2f);
         }
 
         private void Update() {
@@ -42,8 +57,6 @@ namespace Player {
 
         public bool IsGrounded() {
             RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y + 0.1f, ~LayerMask.GetMask("Player"));
-            if (hit.collider != null) canGlide = true;
-
             return hit.collider != null;
         }
 
@@ -53,7 +66,22 @@ namespace Player {
         }
 
         public bool CanDash() {
-            return Time.realtimeSinceStartup - lastDash > dashCooldown;
+            return dashEnabled ? Time.realtimeSinceStartup - lastDash > dashCooldown : false;
+        }
+
+        public void Die(string deathType) {
+            fadePanel.SetActive(true);
+
+            if (deathType == "") {
+                fadePanel.GetComponent<FadePanelController>().FadeIn(delegate {
+                    stateMachine.ChangeState("Idle");
+                    rb.velocity = Vector3.zero;
+                    rb.position = checkpoint;
+                    fadePanel.GetComponent<FadePanelController>().FadeOut(delegate {
+                        fadePanel.SetActive(false);
+                    }, 1f, 1f);
+                }, 2f);
+            }
         }
     }
 }

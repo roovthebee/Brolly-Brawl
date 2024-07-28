@@ -13,7 +13,7 @@ namespace Player {
             player.lastDash = startTime;
 
             // Dash in current direction
-            Vector2 dir = new Vector2(player.rb.velocity.x, 0).normalized;
+            Vector2 dir = new Vector2(Input.GetAxis("Horizontal"), 0).normalized;
             player.rb.velocity = new Vector2(dir.x * player.dashForce, player.rb.velocity.y);
         }
 
