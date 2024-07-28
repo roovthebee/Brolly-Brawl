@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 723469400731967669}
-  - component: {fileID: 962274942305042118}
+  - component: {fileID: 6172606213423795046}
   - component: {fileID: 7509534317371164631}
   - component: {fileID: 9222995789141169977}
   - component: {fileID: 5874229766118435841}
@@ -36,7 +36,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &962274942305042118
+--- !u!212 &6172606213423795046
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -77,12 +77,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: be56376da20153e48a9910756705eb32, type: 3}
+  m_Sprite: {fileID: -6367560908665664636, guid: 40de9a8703e2e5a47882b0b86451c741, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 9167593338777228901}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0aef72a2bbf50024ebab3c7667441a4f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -168,8 +168,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: 0.007591009, y: -0.28085685}
+  m_Size: {x: 1.1265128, y: 1.4990147}
   m_Direction: 0
 --- !u!114 &6933722935917579367
 MonoBehaviour:
@@ -183,12 +183,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 288719c6a8a79694ebe9d997df49eb68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dashEnabled: 0
+  glideEnabled: 0
   moveSpeed: 5
   jumpForce: 12
   dashForce: 16
   dashCooldown: 1
-  canGlide: 1
   lastDash: 0
   minVelocityY: -Infinity
   glideSmoothing: 0.125
   rb: {fileID: 0}
+  checkpoint: {x: 0, y: 0}
+  fadePanel: {fileID: 0}
