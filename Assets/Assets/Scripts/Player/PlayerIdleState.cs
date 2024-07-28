@@ -12,7 +12,7 @@ namespace Player {
                 stateMachine.ChangeState("Move");
             } else if (Input.GetButtonDown("Jump") && player.IsGrounded()) {
                 stateMachine.ChangeState("Jump");
-            } else if (player.canGlide && Input.GetButtonDown("Jump") && player.IsAirborn()) {
+            } else if (player.glideEnabled && Input.GetButtonDown("Jump") && player.IsAirborn()) {
                 stateMachine.ChangeState("Glide");
             }
         }

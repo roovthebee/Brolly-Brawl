@@ -1,8 +1,6 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using System;
 
 namespace Environment {
     public class MovingPlatform : MonoBehaviour {
@@ -17,18 +15,17 @@ namespace Environment {
             }
         }
 
-        private void FixedUpdate() {
+        private void Update() {
             if (pathIndex == -1) return;
 
             PathPoint pathPoint = path[pathIndex];
 
             // Update platform pos
-            Vector2 desiredPos = pathPoint.transform.position;
-            Vector2 smoothedPos = Vector2.Lerp(transform.position, desiredPos, pathPoint.smoothSpeed);
-            transform.position = smoothedPos;
+            Vector3 direction = (pathPoint.transform.position - transform.position).normalized;
+            transform.position += direction * pathPoint.moveSpeed * Time.deltaTime;
 
             // Check if reached destination
-            if ((smoothedPos - desiredPos).sqrMagnitude < 0.1f) {
+            if ((pathPoint.transform.position - transform.position).sqrMagnitude < 0.1f) {
                 // Increment pathIndex
                 if (pathIndex + 1 > path.Count - 1) {
                     pathIndex = 0;
@@ -55,6 +52,6 @@ namespace Environment {
     [System.Serializable]
     public struct PathPoint {
         public Transform transform;
-        public float smoothSpeed;
+        public float moveSpeed;
     }
 }

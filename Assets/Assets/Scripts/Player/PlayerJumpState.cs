@@ -13,7 +13,7 @@ namespace Player {
         public override void Update() {
             if (player.IsGrounded() && player.rb.velocity.y <= 0.01f) {
                 stateMachine.ChangeState("Idle");
-            } else if (player.canGlide && Input.GetButtonDown("Jump") && player.IsAirborn()) {
+            } else if (player.glideEnabled && Input.GetButtonDown("Jump") && player.IsAirborn()) {
                 stateMachine.ChangeState("Glide");
             } else if (Input.GetKeyDown(KeyCode.LeftShift) && player.CanDash()) {
                 stateMachine.ChangeState("Dash");

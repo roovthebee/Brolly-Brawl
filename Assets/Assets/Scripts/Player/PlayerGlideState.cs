@@ -8,7 +8,6 @@ namespace Player {
         public PlayerGlideState(PlayerController player, StateMachine stateMachine) : base (player, stateMachine) {}
 
         public override void OnEnter() {
-            player.canGlide = false;
             player.minVelocityY = -0.1f;
         }
 
