@@ -13,8 +13,13 @@ namespace Player {
             Vector2 desiredVelocity = new Vector2(moveInput * player.moveSpeed, player.rb.velocity.y);
             Vector2 smoothedVelocity = player.rb.velocity + (desiredVelocity - player.rb.velocity) * Time.deltaTime * 8;
             player.rb.velocity = smoothedVelocity;
+            player.GetComponent<SpriteRenderer>().flipX = player.rb.velocity.x < 0;
 
-            bool isGrounded = player.IsGrounded();
+            if (player.rb.velocity.y < -0.1f) {
+                player.GetComponent<Animator>().SetInteger("Animation", 3);
+            } else {
+                player.GetComponent<Animator>().SetInteger("Animation", 1);
+            }
 
             if (moveInput == 0) {
                 stateMachine.ChangeState("Idle");

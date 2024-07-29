@@ -9,6 +9,8 @@ namespace Player {
         public float startTime;
 
         public override void OnEnter() {
+            player.GetComponent<Animator>().SetInteger("Animation", 5);
+
             startTime = Time.realtimeSinceStartup;
             player.lastDash = startTime;
 

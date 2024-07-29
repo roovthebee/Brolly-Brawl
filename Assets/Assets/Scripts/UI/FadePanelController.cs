@@ -34,7 +34,7 @@ namespace UI {
 
             // Calculate increments
             float tick = Time.deltaTime;
-            int increments = (int)(60 * fadeTime);
+            int increments = (int)(1/tick * fadeTime);
             float step = (targetAlpha - startAlpha) / (float)increments;
 
             for (int i = 0; i < increments; i++) {

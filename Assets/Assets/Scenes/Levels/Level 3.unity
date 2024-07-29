@@ -7662,6 +7662,10 @@ PrefabInstance:
       value: Fire Hydrant
       objectReference: {fileID: 0}
     - target: {fileID: 6804371916268997534, guid: 1308596dc08f391498ef95e036eb1f05, type: 3}
+      propertyPath: waterSprite
+      value: 
+      objectReference: {fileID: 7482667652216324306, guid: 223fa4bb591e6284b983c7619bcfc4f9, type: 3}
+    - target: {fileID: 6804371916268997534, guid: 1308596dc08f391498ef95e036eb1f05, type: 3}
       propertyPath: hitboxHeight
       value: 7
       objectReference: {fileID: 0}
@@ -13443,6 +13447,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire Hydrant (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6804371916268997534, guid: 1308596dc08f391498ef95e036eb1f05, type: 3}
+      propertyPath: waterSprite
+      value: 
+      objectReference: {fileID: 7482667652216324306, guid: 223fa4bb591e6284b983c7619bcfc4f9, type: 3}
     - target: {fileID: 6804371916268997534, guid: 1308596dc08f391498ef95e036eb1f05, type: 3}
       propertyPath: hitboxHeight
       value: 12
