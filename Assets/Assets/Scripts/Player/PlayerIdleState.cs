@@ -8,6 +8,10 @@ namespace Player {
         public PlayerIdleState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) {}
 
         public override void Update() {
+            Vector2 desiredVelocity = Vector2.zero;
+            Vector2 smoothedVelocity = player.rb.velocity + (desiredVelocity - player.rb.velocity) * Time.deltaTime * 3;
+            player.rb.velocity = smoothedVelocity;
+
             if (Input.GetAxis("Horizontal") != 0) {
                 stateMachine.ChangeState("Move");
             } else if (Input.GetButtonDown("Jump") && player.IsGrounded()) {

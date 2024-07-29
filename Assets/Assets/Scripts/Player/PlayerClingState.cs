@@ -19,7 +19,9 @@ namespace Player {
             player.rb.velocity -= new Vector2(player.rb.velocity.x, 0);
             player.lastCling = Time.realtimeSinceStartup;
 
-            if (!player.IsAirborn()) {
+            RaycastHit2D hit = Physics2D.Raycast(player.rb.position, -player.currentHit.normal, player.transform.localScale.x, ~LayerMask.GetMask("Player"));
+
+            if (!player.IsAirborn() || !hit.collider) {
                 stateMachine.ChangeState("Idle");
             } else if (Input.GetButtonDown("Jump")) {
                 player.rb.velocity = (player.currentHit.normal * 12) + (Vector2.up * 10);
