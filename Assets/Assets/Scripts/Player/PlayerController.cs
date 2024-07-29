@@ -2,6 +2,7 @@
 using UnityEngine;
 using Utility;
 using UI;
+using System.Drawing;
 
 namespace Player {
     [RequireComponent(typeof(Rigidbody2D))]
@@ -19,6 +20,8 @@ namespace Player {
         private StateMachine stateMachine;
         private Vector2 spawn;
         public Vector2 checkpoint;
+        public float lastCling;
+        public RaycastHit2D currentHit;
 
         // UI
         public GameObject fadePanel;
@@ -36,6 +39,7 @@ namespace Player {
             stateMachine.AddState("Jump", new PlayerJumpState(this, stateMachine));
             stateMachine.AddState("Glide", new PlayerGlideState(this, stateMachine));
             stateMachine.AddState("Dash", new PlayerDashState(this, stateMachine));
+            stateMachine.AddState("Cling", new PlayerClingState(this, stateMachine));
 
             // Set initial state
             stateMachine.ChangeState("Idle");
@@ -52,7 +56,28 @@ namespace Player {
             Vector3 smoothedVelocity = Vector3.Lerp(rb.velocity, desiredVelocity, glideSmoothing);
             rb.velocity = smoothedVelocity;
 
+            RaycastHit2D hitRight = Physics2D.Raycast(rb.position, Vector2.right, transform.localScale.x / 2 + 0.1f, ~LayerMask.GetMask("Player"));
+            if (hitRight.collider != null) {
+                currentHit = hitRight;
+                TryCling(hitRight);
+            }
+
+            RaycastHit2D hitLeft = Physics2D.Raycast(rb.position, Vector2.left, transform.localScale.x / 2 + 0.1f, ~LayerMask.GetMask("Player"));
+            if (hitLeft.collider != null) {
+                currentHit = hitLeft;
+                TryCling(hitLeft);
+            }
+
             stateMachine.Update();
+        }
+
+        public void TryCling(RaycastHit2D hit) {
+            if (!hit.collider.CompareTag("Ground") || Time.realtimeSinceStartup - lastCling < 0.3f || !IsAirborn()) return;
+
+            if (hit.normal.y < 0.01f) {
+                transform.position = hit.point + (hit.normal * transform.localScale.x / 2);
+                stateMachine.ChangeState("Cling");
+            }
         }
 
         public bool IsGrounded() {

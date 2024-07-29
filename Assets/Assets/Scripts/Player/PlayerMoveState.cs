@@ -9,7 +9,10 @@ namespace Player {
 
         public override void Update() {
             float moveInput = Input.GetAxis("Horizontal");
-            player.rb.velocity = new Vector2(moveInput * player.moveSpeed, player.rb.velocity.y);
+
+            Vector2 desiredVelocity = new Vector2(moveInput * player.moveSpeed, player.rb.velocity.y);
+            Vector2 smoothedVelocity = player.rb.velocity + (desiredVelocity - player.rb.velocity) * Time.deltaTime * 8;
+            player.rb.velocity = smoothedVelocity;
 
             bool isGrounded = player.IsGrounded();
 
