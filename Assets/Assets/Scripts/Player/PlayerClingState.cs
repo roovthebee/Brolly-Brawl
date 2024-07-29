@@ -7,6 +7,7 @@ namespace Player {
         public PlayerClingState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) {}
 
         public override void OnEnter() {
+            player.GetComponent<Animator>().SetInteger("Animation", 4);
             player.rb.velocity = Vector2.zero;
             player.rb.gravityScale = 0.2f;
         }

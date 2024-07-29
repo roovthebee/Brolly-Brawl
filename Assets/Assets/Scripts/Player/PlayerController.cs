@@ -98,14 +98,17 @@ namespace Player {
             fadePanel.SetActive(true);
 
             if (deathType == "") {
+                rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                GetComponent<Animator>().SetTrigger("Death");
                 fadePanel.GetComponent<FadePanelController>().FadeIn(delegate {
+                    rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                     stateMachine.ChangeState("Idle");
                     rb.velocity = Vector3.zero;
                     rb.position = checkpoint;
                     fadePanel.GetComponent<FadePanelController>().FadeOut(delegate {
                         fadePanel.SetActive(false);
                     }, 1f, 1f);
-                }, 2f);
+                }, 0.35f);
             }
         }
     }

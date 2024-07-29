@@ -11,6 +11,12 @@ namespace Player {
         }
 
         public override void Update() {
+            if (player.rb.velocity.y < -0.1f) {
+                player.GetComponent<Animator>().SetInteger("Animation", 3);
+            } else {
+                player.GetComponent<Animator>().SetInteger("Animation", 2);
+            }
+
             if (player.IsGrounded() && player.rb.velocity.y <= 0.01f) {
                 stateMachine.ChangeState("Idle");
             } else if (player.glideEnabled && Input.GetButtonDown("Jump") && player.IsAirborn()) {
@@ -19,6 +25,7 @@ namespace Player {
                 stateMachine.ChangeState("Dash");
             } else if (Input.GetAxis("Horizontal") != 0) {
                 player.rb.velocity = new Vector2(Input.GetAxis("Horizontal") * player.moveSpeed, player.rb.velocity.y);
+                player.GetComponent<SpriteRenderer>().flipX = player.rb.velocity.x < 0;
             }
         }
     }
