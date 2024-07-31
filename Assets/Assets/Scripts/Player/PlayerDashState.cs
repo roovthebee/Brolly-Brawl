@@ -17,6 +17,8 @@ namespace Player {
             // Dash in current direction
             Vector2 dir = new Vector2(Input.GetAxis("Horizontal"), 0).normalized;
             player.rb.velocity = new Vector2(dir.x * player.dashForce, player.rb.velocity.y);
+
+            player.GetComponent<SpriteRenderer>().flipX = dir.x < 0;
         }
 
         public override void Update() {

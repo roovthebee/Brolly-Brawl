@@ -183,8 +183,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 288719c6a8a79694ebe9d997df49eb68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashEnabled: 0
-  glideEnabled: 0
+  dashEnabled: 1
+  glideEnabled: 1
   moveSpeed: 5
   jumpForce: 12
   dashForce: 16
@@ -194,4 +194,5 @@ MonoBehaviour:
   glideSmoothing: 0.125
   rb: {fileID: 0}
   checkpoint: {x: 0, y: 0}
-  fadePanel: {fileID: 0}
+  lastCling: 0
+  ui: {fileID: 0}

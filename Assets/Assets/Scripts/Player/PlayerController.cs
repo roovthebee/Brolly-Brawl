@@ -24,7 +24,8 @@ namespace Player {
         public RaycastHit2D currentHit;
 
         // UI
-        public GameObject fadePanel;
+        public GameObject ui;
+        public GameInterfaceController interfaceController;
 
         private void Start() {
             // Set spawn point for this level
@@ -32,6 +33,8 @@ namespace Player {
 
             rb = GetComponent<Rigidbody2D>();
             stateMachine = new StateMachine();
+
+            interfaceController = ui.GetComponent<GameInterfaceController>();
 
             // Initialize states
             stateMachine.AddState("Idle", new PlayerIdleState(this, stateMachine));
@@ -45,9 +48,12 @@ namespace Player {
             stateMachine.ChangeState("Idle");
 
             // Fade into session
-            fadePanel.GetComponent<FadePanelController>().FadeOut(delegate {
-                fadePanel.SetActive(false);
+            interfaceController.FadeScreenOut(delegate {
+                interfaceController.fadePanel.SetActive(false);
             }, 2f);
+
+            // Initialize UI elements
+            if (!dashEnabled) interfaceController.dash.SetActive(false);
         }
 
         private void Update() {
@@ -66,6 +72,12 @@ namespace Player {
             if (hitLeft.collider != null) {
                 currentHit = hitLeft;
                 TryCling(hitLeft);
+            }
+
+            if (dashEnabled && Time.realtimeSinceStartup - lastDash > dashCooldown) {
+                interfaceController.DashEnable();
+            } else {
+                interfaceController.DashDisable();
             }
 
             stateMachine.Update();
@@ -95,18 +107,18 @@ namespace Player {
         }
 
         public void Die(string deathType) {
-            fadePanel.SetActive(true);
+            interfaceController.fadePanel.SetActive(true);
 
             if (deathType == "") {
                 rb.constraints = RigidbodyConstraints2D.FreezeAll;
                 GetComponent<Animator>().SetTrigger("Death");
-                fadePanel.GetComponent<FadePanelController>().FadeIn(delegate {
+                interfaceController.FadeScreenIn(delegate {
                     rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                     stateMachine.ChangeState("Idle");
                     rb.velocity = Vector3.zero;
                     rb.position = checkpoint;
-                    fadePanel.GetComponent<FadePanelController>().FadeOut(delegate {
-                        fadePanel.SetActive(false);
+                    interfaceController.FadeScreenOut(delegate {
+                        interfaceController.fadePanel.SetActive(false);
                     }, 1f, 1f);
                 }, 0.35f);
             }
