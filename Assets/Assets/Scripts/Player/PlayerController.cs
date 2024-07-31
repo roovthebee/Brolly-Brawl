@@ -9,6 +9,7 @@ namespace Player {
     public class PlayerController : MonoBehaviour {
         public bool dashEnabled;
         public bool glideEnabled;
+        public bool clingEnabled;
         public float moveSpeed = 5f;
         public float jumpForce = 7f;
         public float dashForce = 5f;
@@ -84,7 +85,7 @@ namespace Player {
         }
 
         public void TryCling(RaycastHit2D hit) {
-            if (!hit.collider.CompareTag("Ground") || Time.realtimeSinceStartup - lastCling < 0.3f || !IsAirborn()) return;
+            if (!clingEnabled || !hit.collider.CompareTag("Ground") || Time.realtimeSinceStartup - lastCling < 0.3f || !IsAirborn()) return;
 
             if (hit.normal.y < 0.01f) {
                 transform.position = hit.point + (hit.normal * transform.localScale.x / 2);
