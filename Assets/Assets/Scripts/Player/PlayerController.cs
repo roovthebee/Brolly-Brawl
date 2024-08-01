@@ -49,6 +49,8 @@ namespace Player {
             stateMachine.ChangeState("Idle");
 
             // Fade into session
+            interfaceController.fadePanel.SetActive(true);
+
             interfaceController.FadeScreenOut(delegate {
                 interfaceController.fadePanel.SetActive(false);
             }, 2f);

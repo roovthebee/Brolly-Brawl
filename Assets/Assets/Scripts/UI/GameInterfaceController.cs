@@ -84,6 +84,7 @@ namespace UI {
         }
 
         public void OnMainMenuClicked() {
+            Time.timeScale = 1f;
             SceneManager.LoadScene("MainMenu");
         }
 
