@@ -48,3 +48,5 @@ MonoBehaviour:
   - name: Spawn
     position: {x: -10, y: 0}
     size: {x: 1, y: 5}
+  idleSprite: {fileID: 21300000, guid: d00f2430d70cce44c965180762c12efa, type: 3}
+  activeSprite: {fileID: 21300000, guid: 44cddca8d612c234eb88cf22b75e894c, type: 3}

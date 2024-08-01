@@ -3,6 +3,7 @@ using UnityEngine;
 using Utility;
 using UI;
 using System.Drawing;
+using UnityEngine.SceneManagement;
 
 namespace Player {
     [RequireComponent(typeof(Rigidbody2D))]
@@ -112,19 +113,21 @@ namespace Player {
         public void Die(string deathType) {
             interfaceController.fadePanel.SetActive(true);
 
-            if (deathType == "") {
-                rb.constraints = RigidbodyConstraints2D.FreezeAll;
-                GetComponent<Animator>().SetTrigger("Death");
-                interfaceController.FadeScreenIn(delegate {
-                    rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-                    stateMachine.ChangeState("Idle");
-                    rb.velocity = Vector3.zero;
-                    rb.position = checkpoint;
-                    interfaceController.FadeScreenOut(delegate {
-                        interfaceController.fadePanel.SetActive(false);
-                    }, 1f, 1f);
-                }, 0.35f);
-            }
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            GetComponent<Animator>().SetTrigger("Death");
+            interfaceController.FadeScreenIn(delegate {
+                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                stateMachine.ChangeState("Idle");
+                rb.velocity = Vector3.zero;
+                rb.position = checkpoint;
+                interfaceController.FadeScreenOut(delegate {
+                    interfaceController.fadePanel.SetActive(false);
+                }, 1f, 1f);
+            }, 0.35f);
+        }
+
+        public void EndLevel() {
+            SceneManager.LoadScene("MainMenu");
         }
     }
 }
