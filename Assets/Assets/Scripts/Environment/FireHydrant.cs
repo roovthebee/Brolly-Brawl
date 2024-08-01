@@ -2,13 +2,14 @@
 using UnityEngine;
 using System.Collections;
 using Utility;
+using UnityEditor;
 
 namespace Environment {
     public class FireHydrant : MonoBehaviour {
         public float hitboxHeight;
         public Sprite waterSprite;
         float lastActive;
-        public GameObject fireHydrantHitbox;
+        private GameObject fireHydrantHitbox;
 
         private void Awake() {
             fireHydrantHitbox = new GameObject("FireHydrantHitbox");
@@ -20,7 +21,7 @@ namespace Environment {
             boxCollider.isTrigger = true;
 
             SpriteRenderer spriteRenderer = fireHydrantHitbox.AddComponent<SpriteRenderer>();
-            spriteRenderer.color = new Color(0, 1, 1);
+            spriteRenderer.drawMode = SpriteDrawMode.Sliced;
             spriteRenderer.sprite = waterSprite;
             spriteRenderer.sortingOrder = -5;
 
@@ -28,6 +29,9 @@ namespace Environment {
         }
 
         private void Update() {
+            fireHydrantHitbox.GetComponent<SpriteRenderer>().size = new Vector2(1, 1);
+            fireHydrantHitbox.GetComponent<SpriteRenderer>().sprite = waterSprite;
+
             if (Time.realtimeSinceStartup - lastActive > 9) {
                 lastActive = Time.realtimeSinceStartup;
                 StartCoroutine(ActivateHydrant());

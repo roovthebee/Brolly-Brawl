@@ -17,7 +17,7 @@ namespace Player {
         }
 
         public override void Update() {
-            if (!player.IsAirborn() || Input.GetButtonUp("Jump")) {
+            if (player.IsGrounded() || Input.GetButtonUp("Jump")) {
                 stateMachine.ChangeState("Idle");
             } else if (Input.GetKeyDown(KeyCode.LeftShift) && player.CanDash()) {
                 stateMachine.ChangeState("Dash");

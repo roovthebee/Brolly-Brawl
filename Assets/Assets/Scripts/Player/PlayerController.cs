@@ -9,6 +9,7 @@ namespace Player {
     public class PlayerController : MonoBehaviour {
         public bool dashEnabled;
         public bool glideEnabled;
+        public bool clingEnabled;
         public float moveSpeed = 5f;
         public float jumpForce = 7f;
         public float dashForce = 5f;
@@ -24,7 +25,8 @@ namespace Player {
         public RaycastHit2D currentHit;
 
         // UI
-        public GameObject fadePanel;
+        public GameObject ui;
+        public GameInterfaceController interfaceController;
 
         private void Start() {
             // Set spawn point for this level
@@ -32,6 +34,8 @@ namespace Player {
 
             rb = GetComponent<Rigidbody2D>();
             stateMachine = new StateMachine();
+
+            interfaceController = ui.GetComponent<GameInterfaceController>();
 
             // Initialize states
             stateMachine.AddState("Idle", new PlayerIdleState(this, stateMachine));
@@ -45,9 +49,12 @@ namespace Player {
             stateMachine.ChangeState("Idle");
 
             // Fade into session
-            fadePanel.GetComponent<FadePanelController>().FadeOut(delegate {
-                fadePanel.SetActive(false);
+            interfaceController.FadeScreenOut(delegate {
+                interfaceController.fadePanel.SetActive(false);
             }, 2f);
+
+            // Initialize UI elements
+            if (!dashEnabled) interfaceController.dash.SetActive(false);
         }
 
         private void Update() {
@@ -68,11 +75,17 @@ namespace Player {
                 TryCling(hitLeft);
             }
 
+            if (dashEnabled && Time.realtimeSinceStartup - lastDash > dashCooldown) {
+                interfaceController.DashEnable();
+            } else {
+                interfaceController.DashDisable();
+            }
+
             stateMachine.Update();
         }
 
         public void TryCling(RaycastHit2D hit) {
-            if (!hit.collider.CompareTag("Ground") || Time.realtimeSinceStartup - lastCling < 0.3f || !IsAirborn()) return;
+            if (!clingEnabled || !hit.collider.CompareTag("Ground") || Time.realtimeSinceStartup - lastCling < 0.3f || !IsAirborn()) return;
 
             if (hit.normal.y < 0.01f) {
                 transform.position = hit.point + (hit.normal * transform.localScale.x / 2);
@@ -95,18 +108,18 @@ namespace Player {
         }
 
         public void Die(string deathType) {
-            fadePanel.SetActive(true);
+            interfaceController.fadePanel.SetActive(true);
 
             if (deathType == "") {
                 rb.constraints = RigidbodyConstraints2D.FreezeAll;
                 GetComponent<Animator>().SetTrigger("Death");
-                fadePanel.GetComponent<FadePanelController>().FadeIn(delegate {
+                interfaceController.FadeScreenIn(delegate {
                     rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                     stateMachine.ChangeState("Idle");
                     rb.velocity = Vector3.zero;
                     rb.position = checkpoint;
-                    fadePanel.GetComponent<FadePanelController>().FadeOut(delegate {
-                        fadePanel.SetActive(false);
+                    interfaceController.FadeScreenOut(delegate {
+                        interfaceController.fadePanel.SetActive(false);
                     }, 1f, 1f);
                 }, 0.35f);
             }
