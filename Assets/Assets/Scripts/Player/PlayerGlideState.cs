@@ -8,11 +8,12 @@ namespace Player {
         public PlayerGlideState(PlayerController player, StateMachine stateMachine) : base (player, stateMachine) {}
 
         public override void OnEnter() {
-            player.minVelocityY = -0.1f;
+            player.rb.velocity = new Vector2(player.rb.velocity.x, 0);
+            player.rb.gravityScale = 0.1f;
         }
 
         public override void OnExit() {
-            player.minVelocityY = Mathf.NegativeInfinity;
+            player.rb.gravityScale = 3f;
             player.rb.rotation = 0;
         }
 

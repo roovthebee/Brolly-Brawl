@@ -16,7 +16,6 @@ namespace Player {
         public float dashForce = 5f;
         public float dashCooldown = 1;
         public float lastDash = 0;
-        public float minVelocityY = Mathf.NegativeInfinity;
         public float glideSmoothing = 0.125f;
         public Rigidbody2D rb;
         private StateMachine stateMachine;
@@ -61,11 +60,6 @@ namespace Player {
         }
 
         private void Update() {
-            // Constrain velocity
-            Vector3 desiredVelocity = new Vector3(rb.velocity.x, Mathf.Max(rb.velocity.y, minVelocityY), 0);
-            Vector3 smoothedVelocity = Vector3.Lerp(rb.velocity, desiredVelocity, glideSmoothing);
-            rb.velocity = smoothedVelocity;
-
             RaycastHit2D hitRight = Physics2D.Raycast(rb.position, Vector2.right, transform.localScale.x / 2 + 0.1f, ~LayerMask.GetMask("Player"));
             if (hitRight.collider != null) {
                 currentHit = hitRight;
