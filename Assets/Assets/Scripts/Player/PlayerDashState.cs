@@ -9,6 +9,9 @@ namespace Player {
         public float startTime;
 
         public override void OnEnter() {
+            player.umbrellaClose.SetActive(true);
+            player.rb.rotation = 0;
+            player.defaultSource.PlayOneShot(player.playerAudio.dash);
             player.GetComponent<Animator>().SetInteger("Animation", 5);
 
             startTime = Time.realtimeSinceStartup;

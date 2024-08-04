@@ -50014,7 +50014,7 @@ PrefabInstance:
       objectReference: {fileID: 194875726}
     - target: {fileID: 6933722935917579367, guid: 76dead5f5a98c284d889cc99c0f65796, type: 3}
       propertyPath: dashForce
-      value: 24
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6933722935917579367, guid: 76dead5f5a98c284d889cc99c0f65796, type: 3}
       propertyPath: fadePanel

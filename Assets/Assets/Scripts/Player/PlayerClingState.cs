@@ -25,6 +25,7 @@ namespace Player {
             if (!player.IsAirborn() || !hit.collider) {
                 stateMachine.ChangeState("Idle");
             } else if (Input.GetButtonDown("Jump")) {
+                player.defaultSource.PlayOneShot(player.playerAudio.jump);
                 player.rb.velocity = (player.currentHit.normal * 12) + (Vector2.up * 10);
                 stateMachine.ChangeState("Idle");
             }

@@ -8,12 +8,14 @@ namespace Player {
         public PlayerGlideState(PlayerController player, StateMachine stateMachine) : base (player, stateMachine) {}
 
         public override void OnEnter() {
-            player.rb.velocity = new Vector2(player.rb.velocity.x, 0);
-            player.rb.gravityScale = 0.1f;
+            player.umbrellaOpen.SetActive(true);
+            player.GetComponent<Animator>().SetInteger("Animation", 6);
+            player.minVelocityY = Time.deltaTime * 10;
         }
 
         public override void OnExit() {
-            player.rb.gravityScale = 3f;
+            player.umbrellaOpen.SetActive(false);
+            player.minVelocityY = Mathf.NegativeInfinity;
             player.rb.rotation = 0;
         }
 
@@ -32,6 +34,14 @@ namespace Player {
             float desiredYaw = -20 * (player.rb.velocity.x / player.moveSpeed);
             float smoothedYaw = player.rb.rotation + (desiredYaw - player.rb.rotation) * Time.deltaTime * 3;
             player.rb.rotation = smoothedYaw;
+
+            // Update flip
+            player.GetComponent<SpriteRenderer>().flipX = smoothedYaw > 0;
+
+            // Update glide sound
+            float desiredVolume = Mathf.Abs(smoothedYaw / 30);
+            float smoothedVolume = player.glideSource.volume + (desiredVolume - player.glideSource.volume) * Time.deltaTime * 3;
+            player.glideSource.volume = smoothedVolume;
         }
     }
 }

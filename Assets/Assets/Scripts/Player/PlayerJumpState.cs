@@ -7,6 +7,7 @@ namespace Player {
         public PlayerJumpState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) {}
 
         public override void OnEnter() {
+            player.defaultSource.PlayOneShot(player.playerAudio.jump);
             player.rb.velocity = new Vector2(player.rb.velocity.x, player.jumpForce);
         }
 

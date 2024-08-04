@@ -2,7 +2,6 @@
 using UnityEngine;
 using Utility;
 using UI;
-using System.Drawing;
 using UnityEngine.SceneManagement;
 
 namespace Player {
@@ -23,6 +22,13 @@ namespace Player {
         public Vector2 checkpoint;
         public float lastCling;
         public RaycastHit2D currentHit;
+        public float minVelocityY = Mathf.NegativeInfinity;
+        public PlayerAudio playerAudio;
+        public AudioSource defaultSource;
+        public AudioSource glideSource;
+        public GameObject umbrellaOpen;
+        public GameObject umbrellaClose;
+        private Vector2 umbrellaCloseOffset;
 
         // UI
         public GameObject ui;
@@ -57,9 +63,33 @@ namespace Player {
 
             // Initialize UI elements
             if (!dashEnabled) interfaceController.dash.SetActive(false);
+
+            // Initialize sound sources
+            AudioSource[] sources = GetComponents<AudioSource>();
+            if (sources.Length >= 2) {
+                defaultSource = sources[0];
+                glideSource = sources[1];
+            }
+
+            defaultSource.volume = 0.5f;
+
+            glideSource.clip = playerAudio.glide;
+            glideSource.loop = true;
+            glideSource.volume = 0;
+            glideSource.Play();
+
+            umbrellaCloseOffset = rb.position - (Vector2)umbrellaClose.transform.position;
         }
 
         private void Update() {
+            // Constrain velocity
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, minVelocityY));
+
+            // Smooth velocity constraint
+            Vector2 desiredVelocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
+            Vector2 smoothedVelocity = rb.velocity + (desiredVelocity - rb.velocity) * Time.deltaTime * 4;
+            rb.velocity = smoothedVelocity;
+
             RaycastHit2D hitRight = Physics2D.Raycast(rb.position, Vector2.right, transform.localScale.x / 2 + 0.1f, ~LayerMask.GetMask("Player"));
             if (hitRight.collider != null) {
                 currentHit = hitRight;
@@ -72,11 +102,25 @@ namespace Player {
                 TryCling(hitLeft);
             }
 
+            if (Time.realtimeSinceStartup - lastDash > 0.3f) {
+                umbrellaClose.SetActive(false);
+            }
+
             if (dashEnabled && Time.realtimeSinceStartup - lastDash > dashCooldown) {
                 interfaceController.DashEnable();
             } else {
                 interfaceController.DashDisable();
             }
+
+            // Smooth glide volume towards zero
+            float smoothedVolume = glideSource.volume - glideSource.volume * Time.deltaTime * 2;
+            glideSource.volume = smoothedVolume;
+
+            // Update closed umbrella visual
+            umbrellaClose.transform.position = GetComponent<SpriteRenderer>().flipX ? 
+                rb.position + new Vector2(umbrellaCloseOffset.x, -umbrellaCloseOffset.y) : 
+                rb.position + new Vector2(umbrellaCloseOffset.x * -1, -umbrellaCloseOffset.y);
+            umbrellaClose.GetComponent<SpriteRenderer>().flipY = GetComponent<SpriteRenderer>().flipX;
 
             stateMachine.Update();
         }
@@ -91,12 +135,12 @@ namespace Player {
         }
 
         public bool IsGrounded() {
-            RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y + 0.1f, ~LayerMask.GetMask("Player"));
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y + 0.1f, ~LayerMask.GetMask("Player", "Ignore Raycast"));
             return hit.collider != null;
         }
 
         public bool IsAirborn() {
-            RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y * 2, ~LayerMask.GetMask("Player"));
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, transform.localScale.y * 2, ~LayerMask.GetMask("Player", "Ignore Raycast"));
             return hit.collider == null;
         }
 
@@ -117,11 +161,18 @@ namespace Player {
                 interfaceController.FadeScreenOut(delegate {
                     interfaceController.fadePanel.SetActive(false);
                 }, 1f, 1f);
-            }, 0.35f);
+            }, 0.25f);
         }
 
         public void EndLevel() {
             SceneManager.LoadScene("MainMenu");
         }
+    }
+
+    [System.Serializable]
+    public struct PlayerAudio {
+        public AudioClip jump;
+        public AudioClip dash;
+        public AudioClip glide;
     }
 }
